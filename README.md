@@ -4,6 +4,10 @@
 
 Kindle Page Buttons provides two draggable page-turning buttons for the Kindle app on Android 13 and later. Briefly tap `‹` or `›` to send the system D-pad left or right action. A long press does not turn the page; dragging either button moves the entire button group.
 
+|Settings Page|Buttons in Kindle|
+|---|---|
+|![Settings Page](assets/screenshot_1.png)|![Buttons](assets/screenshot_2.png)
+
 ## Build and install
 
 With JDK 17 and Android SDK 34 installed, run this from the repository root:

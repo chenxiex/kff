@@ -4,6 +4,10 @@
 
 为 Android 13+ 的 Kindle 应用提供两个可拖动的悬浮翻页按钮。短按 `‹` / `›` 分别发送系统 D-pad 左/右操作；长按不翻页，拖动任意按钮会移动整个按钮组。
 
+|设置页|Kindle内按钮|
+|---|---|
+|![Settings Page](assets/screenshot_1.png)|![Buttons](assets/screenshot_2.png)
+
 ## 构建与安装
 
 使用 JDK 17 和 Android SDK 34，在仓库根目录运行：
