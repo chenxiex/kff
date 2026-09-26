@@ -10,6 +10,7 @@ final class AppSettings {
     static final String KEY_X_FRACTION = "xFraction";
     static final String KEY_Y_FRACTION = "yFraction";
     static final String KEY_SWAP_BUTTONS = "swapButtons";
+    static final String KEY_BORDERLESS = "borderless";
     static final String KEY_KINDLE_ONLY = "showOnlyInKindle";
 
     static final int DEFAULT_BUTTON_SIZE_DP = 56;
@@ -58,6 +59,14 @@ final class AppSettings {
 
     void setSwapButtons(boolean value) {
         preferences.edit().putBoolean(KEY_SWAP_BUTTONS, value).apply();
+    }
+
+    boolean borderless() {
+        return preferences.getBoolean(KEY_BORDERLESS, false);
+    }
+
+    void setBorderless(boolean value) {
+        preferences.edit().putBoolean(KEY_BORDERLESS, value).apply();
     }
 
     boolean showOnlyInKindle() {

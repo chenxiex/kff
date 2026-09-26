@@ -55,6 +55,13 @@ public final class MainActivity extends Activity {
         addSeekBar(content, R.string.button_spacing, 0, 32, settings.spacingDp(), "dp",
                 settings::setSpacingDp);
 
+        CheckBox borderless = new CheckBox(this);
+        borderless.setBackground(null);
+        borderless.setText(R.string.borderless_mode);
+        borderless.setChecked(settings.borderless());
+        borderless.setOnCheckedChangeListener((button, checked) -> settings.setBorderless(checked));
+        content.addView(borderless);
+
         CheckBox swapButtons = new CheckBox(this);
         swapButtons.setBackground(null);
         swapButtons.setText(R.string.swap_buttons);

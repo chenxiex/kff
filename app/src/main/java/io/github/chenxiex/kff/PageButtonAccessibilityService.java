@@ -41,7 +41,8 @@ public final class PageButtonAccessibilityService extends AccessibilityService {
             (preferences, key) -> {
                 if (AppSettings.KEY_BUTTON_SIZE.equals(key)
                         || AppSettings.KEY_SPACING.equals(key)
-                        || AppSettings.KEY_OPACITY.equals(key)) {
+                        || AppSettings.KEY_OPACITY.equals(key)
+                        || AppSettings.KEY_BORDERLESS.equals(key)) {
                     updateOverlayAppearance();
                 } else if (AppSettings.KEY_X_FRACTION.equals(key)
                         || AppSettings.KEY_Y_FRACTION.equals(key)) {
@@ -184,11 +185,16 @@ public final class PageButtonAccessibilityService extends AccessibilityService {
         nextLayout.topMargin = spacing;
         nextButton.setLayoutParams(nextLayout);
 
-        GradientDrawable background = new GradientDrawable();
-        background.setColor(0x00000000);
-        background.setStroke(dp(1), 0xff000000);
-        previousButton.setBackground(background);
-        nextButton.setBackground(background.getConstantState().newDrawable().mutate());
+        if (settings.borderless()) {
+            previousButton.setBackground(null);
+            nextButton.setBackground(null);
+        } else {
+            GradientDrawable background = new GradientDrawable();
+            background.setColor(0x00000000);
+            background.setStroke(dp(1), 0xff000000);
+            previousButton.setBackground(background);
+            nextButton.setBackground(background.getConstantState().newDrawable().mutate());
+        }
         float opacity = settings.opacityPercent() / 100f;
         previousButton.setAlpha(opacity);
         nextButton.setAlpha(opacity);
