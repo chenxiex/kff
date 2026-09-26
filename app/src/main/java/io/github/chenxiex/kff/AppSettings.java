@@ -24,6 +24,8 @@ final class AppSettings {
     static final int MAX_BUTTON_HEIGHT_PERCENT = 50;
     static final int DEFAULT_BUTTON_WIDTH_PERCENT = 12;
     static final int DEFAULT_BUTTON_HEIGHT_PERCENT = 9;
+    static final int MIN_OPACITY_PERCENT = 0;
+    static final int MAX_OPACITY_PERCENT = 100;
     static final int DEFAULT_OPACITY_PERCENT = 70;
     static final int DEFAULT_SPACING_DP = 4;
     static final float DEFAULT_X_FRACTION = 1.0f;
@@ -90,11 +92,13 @@ final class AppSettings {
     }
 
     int opacityPercent() {
-        return clamp(preferences.getInt(KEY_OPACITY, DEFAULT_OPACITY_PERCENT), 20, 100);
+        return clamp(preferences.getInt(KEY_OPACITY, DEFAULT_OPACITY_PERCENT),
+                MIN_OPACITY_PERCENT, MAX_OPACITY_PERCENT);
     }
 
     void setOpacityPercent(int value) {
-        preferences.edit().putInt(KEY_OPACITY, clamp(value, 20, 100)).apply();
+        preferences.edit().putInt(KEY_OPACITY,
+                clamp(value, MIN_OPACITY_PERCENT, MAX_OPACITY_PERCENT)).apply();
     }
 
     int spacingDp() {

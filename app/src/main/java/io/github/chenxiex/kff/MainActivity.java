@@ -61,7 +61,8 @@ public final class MainActivity extends Activity {
         addSeekBar(content, R.string.button_height, AppSettings.MIN_BUTTON_HEIGHT_PERCENT,
                 AppSettings.MAX_BUTTON_HEIGHT_PERCENT, settings.buttonHeightPercent(), "%",
                 settings::setButtonHeightPercent);
-        addSeekBar(content, R.string.opacity, 20, 100, settings.opacityPercent(), "%",
+        addSeekBar(content, R.string.opacity, AppSettings.MIN_OPACITY_PERCENT,
+                AppSettings.MAX_OPACITY_PERCENT, settings.opacityPercent(), "%",
                 settings::setOpacityPercent);
         addSeekBar(content, R.string.button_spacing, 0, 32, settings.spacingDp(), "dp",
                 settings::setSpacingDp);
