@@ -15,7 +15,7 @@
 
 | 项目 | 当前实现 |
 | --- | --- |
-| 应用 ID | io.github.chenxiex.kff |
+| 应用 ID | Release：io.github.chenxiex.kff；Debug：io.github.chenxiex.kff.debug |
 | 语言与 UI | Java、Android Framework 原生 View；单个 MainActivity |
 | 后台组件 | 单个 PageButtonAccessibilityService；无额外 Service、Receiver、轮询或前台服务 |
 | SDK | minSdk 33、compileSdk 34、targetSdk 34 |
@@ -25,6 +25,8 @@
 | 数据 | SharedPreferences 保存本地设置；Manifest 禁止应用数据备份 |
 
 Manifest 不申请 INTERNET、SYSTEM_ALERT_WINDOW 或其他 uses-permission。无障碍服务以 BIND_ACCESSIBILITY_SERVICE 保护，使用 TYPE_ACCESSIBILITY_OVERLAY 创建窗口，配置 canRetrieveWindowContent=false，不读取 Kindle 正文或节点树，也不使用 dispatchGesture。
+
+Debug 与 Release 可同时安装，应用和无障碍服务名称分别为 Kindle Page Buttons (Debug) 与 Kindle Page Buttons。两版各自保存设置并有独立的无障碍服务；使用时只启用其中一个服务。旧版 Debug 曾使用 Release 包名，首次改用不同签名的正式 APK 时可能仍需一次性迁移旧安装。
 
 ## 无障碍服务与显示范围
 
@@ -83,7 +85,7 @@ MainActivity 使用 ScrollView、LinearLayout 和原生控件，提供系统无�
 - Kindle 前台时 TYPE_ACCESSIBILITY_OVERLAY 窗口存在且可见，尺寸约 126 × 261 像素；切到本应用设置页后窗口消失，返回 Kindle 后重新显示。
 - 调试期间为避免改变用户当前阅读位置，没有通过 ADB 点击按钮或拖动；短按、长按、拖动、正常 Kindle 触控、旋转及重启后的持久化属于后续设备回归项目。
 
-覆盖安装必须使用与设备上旧版相同的签名密钥。不同构建环境的默认 Debug 密钥可能不同；此前一次修复部署因签名不一致，在用户明确授权且确认应用没有保存设置后，才卸载并重装目标应用。
+覆盖安装同一包名必须使用与设备上旧版相同的签名密钥。不同构建环境的默认 Debug 密钥可能不同；此前一次修复部署因签名不一致，在用户明确授权且确认应用没有保存设置后，才卸载并重装目标应用。上述设备验证发生在 Debug 包名增加 `.debug` 后缀之前；两版并存及服务切换尚需设备回归。
 
 ## 后续改动的验收边界
 

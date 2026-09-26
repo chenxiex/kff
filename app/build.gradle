@@ -2,6 +2,9 @@ plugins {
     id 'com.android.application'
 }
 
+def releaseVersionCode = System.getenv('KFF_RELEASE_VERSION_CODE')
+def releaseVersionName = System.getenv('KFF_RELEASE_VERSION_NAME')
+
 android {
     namespace 'io.github.chenxiex.kff'
     compileSdk 34
@@ -11,13 +14,26 @@ android {
         applicationId 'io.github.chenxiex.kff'
         minSdk 33
         targetSdk 34
-        versionCode 1
-        versionName '1.0'
+        versionCode releaseVersionCode ? Integer.parseInt(releaseVersionCode) : 1
+        versionName releaseVersionName ?: '1.0'
+    }
+
+    signingConfigs {
+        release {
+            storeFile file(System.getenv('KFF_KEYSTORE_FILE') ?: 'release-keystore-not-configured.jks')
+            storePassword System.getenv('KFF_STORE_PASSWORD') ?: ''
+            keyAlias System.getenv('KFF_KEY_ALIAS') ?: ''
+            keyPassword System.getenv('KFF_KEY_PASSWORD') ?: ''
+        }
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix '.debug'
+        }
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
         }
     }
 
