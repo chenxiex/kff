@@ -6,6 +6,9 @@
     "remoteUser": "vscode",
     "customizations": {
         "vscode": {
+            "settings": {
+                "java.import.gradle.java.home": "/usr/lib/jvm/msopenjdk-current"
+            },
             "extensions": [
                 "vscjava.vscode-java-pack"
             ]
