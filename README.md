@@ -10,14 +10,14 @@
 ./gradlew assembleDebug
 ```
 
-APK 位于 `app/build/outputs/apk/debug/app-debug.apk`，包名为 `io.github.chenxiex.kff.debug`，应用和无障碍服务显示为 **Kindle Page Buttons (Debug)**。安装后打开应用，点击“打开无障碍设置”，启用该服务。默认仅在 Kindle（`com.amazon.kindle`）前台显示；设置页可调整按钮大小、背景不透明度、间距、左右键对应关系和显示范围，也可重置位置。
+APK 位于 `app/build/outputs/apk/debug/app-debug.apk`，包名为 `io.github.chenxiex.kff.debug`。安装后打开应用，点击“打开无障碍设置”，启用该服务。默认仅在 Kindle（`com.amazon.kindle`）前台显示；设置页可调整按钮大小、背景不透明度、间距、左右键对应关系和显示范围，也可重置位置。
 
 若通过电脑安装，可运行 `adb install -r app/build/outputs/apk/debug/app-debug.apk`；也可以将 APK 复制到设备后直接安装。
-Release 的包名保持 `io.github.chenxiex.kff`，可与新 Debug 版本同时安装。两版的设置和无障碍服务互不共享；切换时请在系统无障碍设置中先关闭旧版服务，再启用要使用的版本，避免两个悬浮按钮同时显示或重复翻页。更新同一版本仍需使用与其已安装 APK 相同的签名密钥；更换构建环境后生成的 Debug APK 可能无法覆盖已有的 Debug 安装。
+Release 的包名保持 `io.github.chenxiex.kff`，可与新 Debug 版本同时安装。两版的设置和无障碍服务互不共享；切换时请在系统无障碍设置中先关闭旧版服务，再启用要使用的版本，避免两个悬浮按钮同时显示或重复翻页。
 
 ## 获取 CI Debug APK
 
-每次推送分支或更新 PR 时，GitHub Actions 的 **Debug APK** 工作流会构建并校验 Debug 安装包，不需要仓库 Secrets。在对应的工作流运行页面，从 **Artifacts** 下载 `kff-debug-*`，解压后得到 `app-debug.apk`。同仓库 PR 的推送和 PR 事件可能各触发一次构建；产物按仓库默认保留时间保存。
+每次推送分支或更新 PR 时，GitHub Actions 的 **Debug APK** 工作流会构建并校验 Debug 安装包。在对应的工作流运行页面，从 **Artifacts** 下载 `kff-debug-*`，解压后得到 `app-debug.apk`。
 
 CI 使用 Android 默认的 Debug 签名。不同运行环境的签名可能不同，因此下载的新 APK 可能无法覆盖安装设备上已有的 Debug 版；安装前请确认现有应用的包名和签名。卸载现有应用会删除其本地设置并关闭对应的无障碍服务。
 
@@ -50,6 +50,4 @@ git push origin v1.0.0
 
 CI 只接受不带前导零或后缀的正式版本标签。它会生成签名 APK，校验包名、版本号和签名，然后创建附有 `kff-vX.Y.Z.apk` 的 GitHub Release。`versionCode` 按 `主版本 × 1,000,000 + 次版本 × 1,000 + 修订版本` 计算；次版本和修订版本必须小于 1000，发布时版本码应高于已安装版本。
 
-旧版 Debug APK 曾使用 Release 的包名 `io.github.chenxiex.kff`。如果设备上仍安装该旧版且签名与正式 APK 不同，首次安装 Release 前需要一次性处理旧安装；卸载会删除它的本地设置并关闭其无障碍服务。请先确认设备上的包名、签名和设置，再决定是否卸载；构建和 CI 不会自动卸载设备应用。此后两版使用不同包名，无需为切换反复卸载。
-
-本应用完全离线，不需要 root、Shizuku、悬浮窗权限或 ADB 常驻。启用无障碍服务后，设备重启无需重新从电脑初始化。
+本应用完全离线，不需要 root、Shizuku、悬浮窗权限或 ADB 常驻。

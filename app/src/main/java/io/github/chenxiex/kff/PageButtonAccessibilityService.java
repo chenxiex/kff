@@ -157,7 +157,7 @@ public final class PageButtonAccessibilityService extends AccessibilityService {
                 PixelFormat.TRANSLUCENT);
         overlayParams.gravity = Gravity.TOP | Gravity.LEFT;
         overlayParams.setFitInsetsTypes(0);
-        overlayParams.setTitle("Kindle Page Buttons");
+        overlayParams.setTitle(getString(R.string.app_name));
         updateOverlayAppearance();
     }
 

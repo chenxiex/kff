@@ -26,7 +26,7 @@
 
 Manifest 不申请 INTERNET、SYSTEM_ALERT_WINDOW 或其他 uses-permission。无障碍服务以 BIND_ACCESSIBILITY_SERVICE 保护，使用 TYPE_ACCESSIBILITY_OVERLAY 创建窗口，配置 canRetrieveWindowContent=false，不读取 Kindle 正文或节点树，也不使用 dispatchGesture。
 
-Debug 与 Release 可同时安装，应用和无障碍服务名称分别为 Kindle Page Buttons (Debug) 与 Kindle Page Buttons。两版各自保存设置并有独立的无障碍服务；使用时只启用其中一个服务。旧版 Debug 曾使用 Release 包名，首次改用不同签名的正式 APK 时可能仍需一次性迁移旧安装。
+Debug 与 Release 可同时安装。中文环境下，应用和无障碍服务名称分别为 K翻翻（调试版）与 K翻翻；其他语言环境下分别为 Kindle Page Buttons (Debug) 与 Kindle Page Buttons。两版各自保存设置并有独立的无障碍服务；使用时只启用其中一个服务。旧版 Debug 曾使用 Release 包名，首次改用不同签名的正式 APK 时可能仍需一次性迁移旧安装。
 
 ## 无障碍服务与显示范围
 
