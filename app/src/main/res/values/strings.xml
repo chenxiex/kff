@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kindle Page Buttons</string>
+    <string name="accessibility_service_description">显示可移动的翻页悬浮按钮；短按发送系统方向键，长按不翻页，拖动可调整位置。本服务不会读取或保存屏幕内容。</string>
+    <string name="service_title">无障碍服务</string>
+    <string name="service_enabled">状态：已启用</string>
+    <string name="service_disabled">状态：未启用</string>
+    <string name="open_accessibility_settings">打开无障碍设置</string>
+    <string name="button_size">按钮大小</string>
+    <string name="opacity">背景不透明度</string>
+    <string name="button_spacing">按钮间距</string>
+    <string name="swap_buttons">交换上一页 / 下一页</string>
+    <string name="display_scope">按钮显示</string>
+    <string name="kindle_only">仅 Kindle</string>
+    <string name="all_apps">所有应用</string>
+    <string name="reset_position">重置按钮位置</string>
+    <string name="usage_hint">短按 ‹ / › 翻页；拖动可移动按钮组；长按不会翻页。</string>
+    <string name="previous_page">上一页</string>
+    <string name="next_page">下一页</string>
+</resources>
