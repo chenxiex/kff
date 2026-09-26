@@ -15,6 +15,12 @@ APK 位于 `app/build/outputs/apk/debug/app-debug.apk`，包名为 `io.github.ch
 若通过电脑安装，可运行 `adb install -r app/build/outputs/apk/debug/app-debug.apk`；也可以将 APK 复制到设备后直接安装。
 Release 的包名保持 `io.github.chenxiex.kff`，可与新 Debug 版本同时安装。两版的设置和无障碍服务互不共享；切换时请在系统无障碍设置中先关闭旧版服务，再启用要使用的版本，避免两个悬浮按钮同时显示或重复翻页。更新同一版本仍需使用与其已安装 APK 相同的签名密钥；更换构建环境后生成的 Debug APK 可能无法覆盖已有的 Debug 安装。
 
+## 获取 CI Debug APK
+
+每次推送分支或更新 PR 时，GitHub Actions 的 **Debug APK** 工作流会构建并校验 Debug 安装包，不需要仓库 Secrets。在对应的工作流运行页面，从 **Artifacts** 下载 `kff-debug-*`，解压后得到 `app-debug.apk`。同仓库 PR 的推送和 PR 事件可能各触发一次构建；产物按仓库默认保留时间保存。
+
+CI 使用 Android 默认的 Debug 签名。不同运行环境的签名可能不同，因此下载的新 APK 可能无法覆盖安装设备上已有的 Debug 版；安装前请确认现有应用的包名和签名。卸载现有应用会删除其本地设置并关闭对应的无障碍服务。
+
 ## 发布 GitHub Release
 
 首次发布前，在仓库外的安全位置生成并备份一份长期使用的签名密钥。例如，将下面的密钥文件路径替换为你自己的安全存放位置：
