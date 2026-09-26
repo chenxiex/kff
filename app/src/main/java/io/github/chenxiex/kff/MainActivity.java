@@ -8,6 +8,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -29,6 +30,12 @@ public final class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         settings = new AppSettings(this);
+        WindowManager windowManager = getSystemService(WindowManager.class);
+        if (windowManager != null) {
+            settings.migrateLegacyButtonSize(
+                    AppSettings.safeArea(windowManager.getCurrentWindowMetrics()),
+                    getResources().getDisplayMetrics().density);
+        }
 
         ScrollView scrollView = new ScrollView(this);
         LinearLayout content = new LinearLayout(this);
@@ -48,8 +55,12 @@ public final class MainActivity extends Activity {
                 startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)));
         content.addView(accessibilitySettings);
 
-        addSeekBar(content, R.string.button_size, 36, 96, settings.buttonSizeDp(), "dp",
-                settings::setButtonSizeDp);
+        addSeekBar(content, R.string.button_width, AppSettings.MIN_BUTTON_WIDTH_PERCENT,
+                AppSettings.MAX_BUTTON_WIDTH_PERCENT, settings.buttonWidthPercent(), "%",
+                settings::setButtonWidthPercent);
+        addSeekBar(content, R.string.button_height, AppSettings.MIN_BUTTON_HEIGHT_PERCENT,
+                AppSettings.MAX_BUTTON_HEIGHT_PERCENT, settings.buttonHeightPercent(), "%",
+                settings::setButtonHeightPercent);
         addSeekBar(content, R.string.opacity, 20, 100, settings.opacityPercent(), "%",
                 settings::setOpacityPercent);
         addSeekBar(content, R.string.button_spacing, 0, 32, settings.spacingDp(), "dp",

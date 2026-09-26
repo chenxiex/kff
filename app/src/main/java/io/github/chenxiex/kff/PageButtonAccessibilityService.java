@@ -15,9 +15,7 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.WindowInsets;
 import android.view.WindowManager;
-import android.view.WindowMetrics;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -39,7 +37,8 @@ public final class PageButtonAccessibilityService extends AccessibilityService {
 
     private final SharedPreferences.OnSharedPreferenceChangeListener settingsListener =
             (preferences, key) -> {
-                if (AppSettings.KEY_BUTTON_SIZE.equals(key)
+                if (AppSettings.KEY_BUTTON_WIDTH.equals(key)
+                        || AppSettings.KEY_BUTTON_HEIGHT.equals(key)
                         || AppSettings.KEY_SPACING.equals(key)
                         || AppSettings.KEY_OPACITY.equals(key)
                         || AppSettings.KEY_BORDERLESS.equals(key)) {
@@ -74,6 +73,8 @@ public final class PageButtonAccessibilityService extends AccessibilityService {
                 logFailure("WindowManager unavailable", null);
                 return;
             }
+            settings.migrateLegacyButtonSize(safeArea(),
+                    windowContext.getResources().getDisplayMetrics().density);
             touchSlop = ViewConfiguration.get(windowContext).getScaledTouchSlop();
             createOverlay();
             updateVisibility();
@@ -127,9 +128,9 @@ public final class PageButtonAccessibilityService extends AccessibilityService {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        positionFromPreferences();
+        updateOverlayAppearance();
         if (overlayAttached) {
-            overlayView.post(this::positionFromPreferences);
+            overlayView.post(this::updateOverlayAppearance);
         }
     }
 
@@ -176,12 +177,17 @@ public final class PageButtonAccessibilityService extends AccessibilityService {
         if (overlayView == null || settings == null) {
             return;
         }
-        int size = dp(settings.buttonSizeDp());
-        int spacing = dp(settings.spacingDp());
-        previousButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, size * 0.58f);
-        nextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, size * 0.58f);
-        previousButton.setLayoutParams(new LinearLayout.LayoutParams(size, size));
-        LinearLayout.LayoutParams nextLayout = new LinearLayout.LayoutParams(size, size);
+        Rect area = safeArea();
+        int width = Math.max(1, Math.round(area.width() * settings.buttonWidthPercent() / 100f));
+        int height = Math.min(Math.max(1, Math.round(area.height()
+                * settings.buttonHeightPercent() / 100f)), Math.max(1, area.height() / 2));
+        int spacing = Math.min(dp(settings.spacingDp()),
+                Math.max(0, area.height() - height * 2));
+        float textSize = Math.min(width, height) * 0.58f;
+        previousButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+        nextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+        previousButton.setLayoutParams(new LinearLayout.LayoutParams(width, height));
+        LinearLayout.LayoutParams nextLayout = new LinearLayout.LayoutParams(width, height);
         nextLayout.topMargin = spacing;
         nextButton.setLayoutParams(nextLayout);
 
@@ -199,8 +205,8 @@ public final class PageButtonAccessibilityService extends AccessibilityService {
         previousButton.setAlpha(opacity);
         nextButton.setAlpha(opacity);
 
-        overlayParams.width = size;
-        overlayParams.height = size * 2 + spacing;
+        overlayParams.width = width;
+        overlayParams.height = height * 2 + spacing;
         positionFromPreferences();
     }
 
@@ -219,7 +225,7 @@ public final class PageButtonAccessibilityService extends AccessibilityService {
         if (overlayAttached) {
             return;
         }
-        positionFromPreferences();
+        updateOverlayAppearance();
         try {
             windowManager.addView(overlayView, overlayParams);
             overlayAttached = true;
@@ -251,15 +257,7 @@ public final class PageButtonAccessibilityService extends AccessibilityService {
     }
 
     private Rect safeArea() {
-        WindowMetrics metrics = windowManager.getCurrentWindowMetrics();
-        Rect bounds = new Rect(metrics.getBounds());
-        android.graphics.Insets insets = metrics.getWindowInsets().getInsetsIgnoringVisibility(
-                WindowInsets.Type.systemBars() | WindowInsets.Type.displayCutout());
-        bounds.left += insets.left;
-        bounds.top += insets.top;
-        bounds.right -= insets.right;
-        bounds.bottom -= insets.bottom;
-        return bounds;
+        return AppSettings.safeArea(windowManager.getCurrentWindowMetrics());
     }
 
     private void moveOverlay(int x, int y) {

@@ -2,9 +2,14 @@ package io.github.chenxiex.kff;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
+import android.view.WindowInsets;
+import android.view.WindowMetrics;
 
 final class AppSettings {
-    static final String KEY_BUTTON_SIZE = "buttonSizeDp";
+    private static final String KEY_LEGACY_BUTTON_SIZE = "buttonSizeDp";
+    static final String KEY_BUTTON_WIDTH = "buttonWidthPercent";
+    static final String KEY_BUTTON_HEIGHT = "buttonHeightPercent";
     static final String KEY_OPACITY = "opacity";
     static final String KEY_SPACING = "spacingDp";
     static final String KEY_X_FRACTION = "xFraction";
@@ -13,7 +18,12 @@ final class AppSettings {
     static final String KEY_BORDERLESS = "borderless";
     static final String KEY_KINDLE_ONLY = "showOnlyInKindle";
 
-    static final int DEFAULT_BUTTON_SIZE_DP = 56;
+    static final int MIN_BUTTON_WIDTH_PERCENT = 5;
+    static final int MAX_BUTTON_WIDTH_PERCENT = 30;
+    static final int MIN_BUTTON_HEIGHT_PERCENT = 3;
+    static final int MAX_BUTTON_HEIGHT_PERCENT = 50;
+    static final int DEFAULT_BUTTON_WIDTH_PERCENT = 12;
+    static final int DEFAULT_BUTTON_HEIGHT_PERCENT = 9;
     static final int DEFAULT_OPACITY_PERCENT = 70;
     static final int DEFAULT_SPACING_DP = 4;
     static final float DEFAULT_X_FRACTION = 1.0f;
@@ -29,12 +39,54 @@ final class AppSettings {
         return preferences;
     }
 
-    int buttonSizeDp() {
-        return clamp(preferences.getInt(KEY_BUTTON_SIZE, DEFAULT_BUTTON_SIZE_DP), 36, 96);
+    int buttonWidthPercent() {
+        return clamp(preferences.getInt(KEY_BUTTON_WIDTH, DEFAULT_BUTTON_WIDTH_PERCENT),
+                MIN_BUTTON_WIDTH_PERCENT, MAX_BUTTON_WIDTH_PERCENT);
     }
 
-    void setButtonSizeDp(int value) {
-        preferences.edit().putInt(KEY_BUTTON_SIZE, clamp(value, 36, 96)).apply();
+    void setButtonWidthPercent(int value) {
+        preferences.edit().putInt(KEY_BUTTON_WIDTH,
+                clamp(value, MIN_BUTTON_WIDTH_PERCENT, MAX_BUTTON_WIDTH_PERCENT)).apply();
+    }
+
+    int buttonHeightPercent() {
+        return clamp(preferences.getInt(KEY_BUTTON_HEIGHT, DEFAULT_BUTTON_HEIGHT_PERCENT),
+                MIN_BUTTON_HEIGHT_PERCENT, MAX_BUTTON_HEIGHT_PERCENT);
+    }
+
+    void setButtonHeightPercent(int value) {
+        preferences.edit().putInt(KEY_BUTTON_HEIGHT,
+                clamp(value, MIN_BUTTON_HEIGHT_PERCENT, MAX_BUTTON_HEIGHT_PERCENT)).apply();
+    }
+
+    void migrateLegacyButtonSize(Rect safeArea, float density) {
+        if (!preferences.contains(KEY_LEGACY_BUTTON_SIZE)
+                || safeArea.width() <= 0 || safeArea.height() <= 0) {
+            return;
+        }
+        int sizePx = Math.round(clamp(preferences.getInt(KEY_LEGACY_BUTTON_SIZE, 56), 36, 96)
+                * density);
+        SharedPreferences.Editor editor = preferences.edit();
+        if (!preferences.contains(KEY_BUTTON_WIDTH)) {
+            editor.putInt(KEY_BUTTON_WIDTH, clamp(Math.round(sizePx * 100f / safeArea.width()),
+                    MIN_BUTTON_WIDTH_PERCENT, MAX_BUTTON_WIDTH_PERCENT));
+        }
+        if (!preferences.contains(KEY_BUTTON_HEIGHT)) {
+            editor.putInt(KEY_BUTTON_HEIGHT, clamp(Math.round(sizePx * 100f / safeArea.height()),
+                    MIN_BUTTON_HEIGHT_PERCENT, MAX_BUTTON_HEIGHT_PERCENT));
+        }
+        editor.remove(KEY_LEGACY_BUTTON_SIZE).apply();
+    }
+
+    static Rect safeArea(WindowMetrics metrics) {
+        Rect bounds = new Rect(metrics.getBounds());
+        android.graphics.Insets insets = metrics.getWindowInsets().getInsetsIgnoringVisibility(
+                WindowInsets.Type.systemBars() | WindowInsets.Type.displayCutout());
+        bounds.left += insets.left;
+        bounds.top += insets.top;
+        bounds.right -= insets.right;
+        bounds.bottom -= insets.bottom;
+        return bounds;
     }
 
     int opacityPercent() {

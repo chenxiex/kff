@@ -6,7 +6,8 @@
     <string name="service_enabled">状态：已启用</string>
     <string name="service_disabled">状态：未启用</string>
     <string name="open_accessibility_settings">打开无障碍设置</string>
-    <string name="button_size">按钮大小</string>
+    <string name="button_width">按钮宽度（可用屏宽）</string>
+    <string name="button_height">按钮高度（可用屏高）</string>
     <string name="opacity">按钮不透明度</string>
     <string name="button_spacing">按钮间距</string>
     <string name="borderless_mode">无边框模式</string>

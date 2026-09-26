@@ -10,7 +10,7 @@
 ./gradlew assembleDebug
 ```
 
-APK 位于 `app/build/outputs/apk/debug/app-debug.apk`，包名为 `io.github.chenxiex.kff.debug`。安装后打开应用，点击“打开无障碍设置”，启用该服务。默认仅在 Kindle（`com.amazon.kindle`）前台显示；设置页可调整按钮大小、按钮不透明度、间距、无边框模式、左右键对应关系和显示范围，也可重置位置。
+APK 位于 `app/build/outputs/apk/debug/app-debug.apk`，包名为 `io.github.chenxiex.kff.debug`。安装后打开应用，点击“打开无障碍设置”，启用该服务。默认仅在 Kindle（`com.amazon.kindle`）前台显示；设置页可分别调整按钮宽度和高度（占可用屏幕的百分比）、按钮不透明度、间距、无边框模式、左右键对应关系和显示范围，也可重置位置。
 
 若通过电脑安装，可运行 `adb install -r app/build/outputs/apk/debug/app-debug.apk`；也可以将 APK 复制到设备后直接安装。
 Release 的包名保持 `io.github.chenxiex.kff`，可与新 Debug 版本同时安装。两版的设置和无障碍服务互不共享；切换时请在系统无障碍设置中先关闭旧版服务，再启用要使用的版本，避免两个悬浮按钮同时显示或重复翻页。
