@@ -185,11 +185,13 @@ public final class PageButtonAccessibilityService extends AccessibilityService {
         nextButton.setLayoutParams(nextLayout);
 
         GradientDrawable background = new GradientDrawable();
-        background.setColor((Math.round(settings.opacityPercent() * 255f / 100f) << 24)
-                | 0x00ffffff);
+        background.setColor(0x00000000);
         background.setStroke(dp(1), 0xff000000);
         previousButton.setBackground(background);
         nextButton.setBackground(background.getConstantState().newDrawable().mutate());
+        float opacity = settings.opacityPercent() / 100f;
+        previousButton.setAlpha(opacity);
+        nextButton.setAlpha(opacity);
 
         overlayParams.width = size;
         overlayParams.height = size * 2 + spacing;
