@@ -20,7 +20,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.util.List;
-import java.util.Locale;
 
 public final class MainActivity extends Activity {
     private AppSettings settings;
@@ -159,7 +158,7 @@ public final class MainActivity extends Activity {
     }
 
     private String formatSetting(int labelId, int value, String unit) {
-        return String.format(Locale.getDefault(), "%s：%d%s", getString(labelId), value, unit);
+        return getString(R.string.setting_value_format, getString(labelId), value, unit);
     }
 
     private TextView label(String text, int textSizeSp) {

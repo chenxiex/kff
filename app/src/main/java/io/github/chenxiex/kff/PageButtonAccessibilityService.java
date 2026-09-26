@@ -128,6 +128,11 @@ public final class PageButtonAccessibilityService extends AccessibilityService {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        if (overlayView != null && overlayParams != null) {
+            previousButton.setContentDescription(getString(R.string.previous_page));
+            nextButton.setContentDescription(getString(R.string.next_page));
+            overlayParams.setTitle(getString(R.string.app_name));
+        }
         updateOverlayAppearance();
         if (overlayAttached) {
             overlayView.post(this::updateOverlayAppearance);

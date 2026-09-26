@@ -28,6 +28,8 @@ Manifest 不申请 INTERNET、SYSTEM_ALERT_WINDOW 或其他 uses-permission。�
 
 Debug 与 Release 可同时安装。中文环境下，应用和无障碍服务名称分别为 K翻翻（调试版）与 K翻翻；其他语言环境下分别为 Kindle Page Buttons (Debug) 与 Kindle Page Buttons。两版各自保存设置并有独立的无障碍服务；使用时只启用其中一个服务。旧版 Debug 曾使用 Release 包名，首次改用不同签名的正式 APK 时可能仍需一次性迁移旧安装。
 
+界面文案、无障碍服务说明和悬浮按钮的无障碍描述跟随系统语言：中文环境使用中文，其他语言使用英文。运行中更改系统语言时，悬浮按钮的无障碍描述和窗口标题随配置变化更新；应用内不提供独立的语言设置。
+
 ## 无障碍服务与显示范围
 
 服务只订阅 TYPE_WINDOW_STATE_CHANGED。未授予读取窗口内容能力时，TYPE_WINDOWS_CHANGED 及 getWindows() 不能作为前台识别依据。服务以窗口状态事件的 packageName 判断最近活动窗口；忽略自身悬浮窗事件，但本应用 MainActivity 的事件会使“仅 Kindle”模式隐藏按钮。
